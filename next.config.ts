@@ -42,6 +42,31 @@ const seguridad = [
   { key: "Strict-Transport-Security", value: "max-age=63072000" },
 ];
 
+/** Páginas generales de la web anterior (www.metalandes.com/archivos/…) → página nueva. */
+const PAGINAS_VIEJAS: Record<string, string> = {
+  MAIN: "/",
+  MAIN2: "/",
+  MAIN2025: "/",
+  MAINFISE: "/",
+  TOP: "/",
+  LEFT1: "/",
+  CONTzz: "/",
+  EMPR: "/empresa",
+  Company: "/empresa",
+  "1SUB": "/productos",
+  MAN: "/servicios/mantenimiento",
+  "2MAN": "/servicios/mantenimiento",
+  "2MAN1": "/servicios/mantenimiento",
+  "3AUT": "/servicios",
+  CONT: "/contacto",
+  SIG1: "/empresa/gestion-integral",
+  SIG2: "/empresa/gestion-integral",
+  SIG3: "/empresa/certificaciones",
+  SIG3G: "/empresa/certificaciones",
+  SIG3R: "/empresa/certificaciones",
+  SIG4: "/empresa/tratamiento-datos",
+};
+
 const nextConfig: NextConfig = {
   // No anunciar con qué está hecho el sitio (pista gratis para un atacante).
   poweredByHeader: false,
@@ -61,9 +86,19 @@ const nextConfig: NextConfig = {
     // Fotos subidas desde el Studio: viven en la CDN de Sanity.
     remotePatterns: [{ protocol: "https", hostname: "cdn.sanity.io" }],
   },
-  // La sección se llama PQRS: quien escriba /pqrs llega a la página.
   async redirects() {
-    return [{ source: "/pqrs", destination: "/pqr", permanent: true }];
+    return [
+      // La sección se llama PQRS: quien escriba /pqrs llega a la página.
+      { source: "/pqrs", destination: "/pqr", permanent: true },
+      // Páginas de la web anterior que Google todavía muestra: cada una lleva a su equivalente.
+      ...Object.entries(PAGINAS_VIEJAS).map(([vieja, nueva]) => ({
+        source: `/archivos/${vieja}.html`,
+        destination: nueva,
+        permanent: true,
+      })),
+      { source: "/index.html", destination: "/", permanent: true },
+      { source: "/index.htm", destination: "/", permanent: true },
+    ];
   },
 };
 
