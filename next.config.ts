@@ -67,9 +67,35 @@ const PAGINAS_VIEJAS: Record<string, string> = {
   SIG4: "/empresa/tratamiento-datos",
 };
 
+/**
+ * Los códigos QR impresos en los tableros entregados desde 2020 apuntan a
+ * www.metalandes.com/archivos/qr/… y /archivos/pc/…; esas direcciones no
+ * pueden cambiar. Los archivos siguen en el hosting anterior (Bluehost,
+ * public_html/archivos), así que el sitio los trae de allá sin cambiar la
+ * dirección: el QR no nota la diferencia y la empresa los sigue subiendo
+ * como siempre.
+ *
+ * Sólo se reenvían esas dos carpetas, no /archivos completo: ahí también
+ * hay certificados originales y hojas internas que no deben publicarse.
+ * metalandes.net debe seguir en Bluehost mientras esto apunte a él.
+ */
+const ORIGEN_ARCHIVOS = "https://metalandes.net";
+const CARPETAS_QR = ["qr", "pc"];
+
 const nextConfig: NextConfig = {
   // No anunciar con qué está hecho el sitio (pista gratis para un atacante).
   poweredByHeader: false,
+  async rewrites() {
+    return {
+      // Antes que cualquier página del sitio (incluida la de «no encontrada»).
+      beforeFiles: CARPETAS_QR.map((c) => ({
+        source: `/archivos/${c}/:ruta*`,
+        destination: `${ORIGEN_ARCHIVOS}/archivos/${c}/:ruta*`,
+      })),
+      afterFiles: [],
+      fallback: [],
+    };
+  },
   async headers() {
     return [
       { source: "/:path*", headers: seguridad },
