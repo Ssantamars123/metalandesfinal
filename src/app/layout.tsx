@@ -19,7 +19,7 @@ const sans = Anybody({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://metalandes.net"),
+  metadataBase: new URL("https://www.metalandes.com"),
   title: {
     default: "Metalandes Electric — Más de 65 años energizando Colombia",
     template: "%s · Metalandes Electric",

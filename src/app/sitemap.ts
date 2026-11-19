@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getPosts } from "@/sanity/queries";
 
-const BASE = "https://metalandes.net";
+const BASE = "https://www.metalandes.com";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
